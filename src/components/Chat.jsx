@@ -15,6 +15,7 @@ const Chat = () => {
 
   useEffect(() => {
     const q = query(collection(db, `${chatDB}`), orderBy("timestamp"));
+
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       let messages = [];
       querySnapshot.forEach((doc) => {
@@ -23,6 +24,7 @@ const Chat = () => {
       console.log(messages);
       setMessages(messages);
     });
+    
     return () => unsubscribe();
   }, []);
 

@@ -21,7 +21,7 @@ function App() {
         <section className={style.sectionContainer}>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Directory />} />
+            <Route path="/" element={<Directory user={user} />} />
             <Route path="/chat-1" element={user ? <Chat /> : null} />
             <Route path="/chat-2" element={user ? <Chat2 /> : null} />
           </Routes>
