@@ -11,6 +11,7 @@ import { db } from "../firebase";
 
 const Directory = ({ user }) => {
   const [users, setUsers] = useState([]);
+  const [validUSer, setValidUser] = useState(true);
 
   useEffect(() => {
     const q = query(collection(db, "User-Collection"), orderBy("name"));
@@ -33,20 +34,20 @@ const Directory = ({ user }) => {
 
         for (user of users) {
           if (givenUser.uid === user.uid) {
-            return true;
+            setValidUser(true);
           }
         }
-        return false;
-      };
-
-      if (userCheck(user)) {
-        return;
-      } else {
-        addDoc(collection(db, "User-Collection"), {
-          name: user.displayName,
-          uid: user.uid,
+        setValidUser(false).then((validUSer) => {
+          if (validUSer) {
+            return;
+          } else {
+            addDoc(collection(db, "User-Collection"), {
+              name: user.displayName,
+              uid: user.uid,
+            });
+          }
         });
-      }
+      };
     }
   }, [users]);
 
