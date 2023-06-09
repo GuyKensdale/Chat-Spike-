@@ -5,13 +5,15 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-const Directory = ({ user }) => {
+const Directory = () => {
+  const [user] = useAuthState(auth);
   const [users, setUsers] = useState([]);
-  const [validUSer, setValidUser] = useState(true);
+  const haveSetUsers = useRef(false);
 
   useEffect(() => {
     const q = query(collection(db, "User-Collection"), orderBy("name"));
@@ -20,8 +22,8 @@ const Directory = ({ user }) => {
       querySnapshot.forEach((doc) => {
         usersList.push({ ...doc.data(), id: doc.id });
       });
-      console.log(usersList);
       setUsers(usersList);
+      haveSetUsers.current = true;
     });
     return () => usersQuery();
   }, []);
@@ -29,25 +31,24 @@ const Directory = ({ user }) => {
   useEffect(() => {
     if (user) {
       const userCheck = (givenUser) => {
-        console.log(users);
-        console.log(givenUser);
-
-        for (user of users) {
+        for (const user of users) {
           if (givenUser.uid === user.uid) {
-            setValidUser(true);
+            return true;
           }
         }
-        setValidUser(false).then((validUSer) => {
-          if (validUSer) {
-            return;
-          } else {
-            addDoc(collection(db, "User-Collection"), {
-              name: user.displayName,
-              uid: user.uid,
-            });
-          }
-        });
+        return false;
       };
+
+      if (userCheck(auth.currentUser)) {
+        return;
+      } else {
+        if (haveSetUsers.current === true) {
+          addDoc(collection(db, "User-Collection"), {
+            name: auth.currentUser.displayName,
+            uid: auth.currentUser.uid,
+          });
+        }
+      }
     }
   }, [users]);
 

@@ -14,14 +14,13 @@ const style = {
 
 function App() {
   const [user] = useAuthState(auth);
-  console.log(user);
   return (
     <BrowserRouter>
       <div className={style.appContainer}>
         <section className={style.sectionContainer}>
           <Navbar />
           <Routes>
-            <Route path="/" element={<Directory user={user} />} />
+            <Route path="/" element={<Directory />} />
             <Route path="/chat-1" element={user ? <Chat /> : null} />
             <Route path="/chat-2" element={user ? <Chat2 /> : null} />
           </Routes>
