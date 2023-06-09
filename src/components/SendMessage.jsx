@@ -8,7 +8,7 @@ const style = {
   button: `w-[20%] bg-green-500`,
 };
 
-const SendMessage = ({ scroll }) => {
+const SendMessage = ({ scroll, chatDB }) => {
   const [input, setInput] = useState("");
 
   const sendMessage = async (e) => {
@@ -18,7 +18,7 @@ const SendMessage = ({ scroll }) => {
       return;
     }
     const { uid, displayName } = auth.currentUser;
-    await addDoc(collection(db, "messages"), {
+    await addDoc(collection(db, `${chatDB}`), {
       text: input,
       name: displayName,
       uid,

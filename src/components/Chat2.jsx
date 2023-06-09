@@ -8,8 +8,8 @@ const style = {
   main: `flex flex-col p-[10px] relative overflow-y-scroll max-h-[85%]`,
 };
 
-const Chat = () => {
-  const chatDB = "messages"
+const Chat2 = () => {
+  const chatDB = "messages2";
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
 
@@ -40,4 +40,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Chat2;
